@@ -1,13 +1,15 @@
 {
     "name": "beheh/cmcgames",
-    "require": {
-        "beheh/sulphur": "~1.1"
-    },
+	"type": "project",
     "license": "ISC",
     "authors": [
         {
             "name": "Benedict Etzel",
-            "email": "developer@beheh.de"
+            "email": "developer@beheh.de",
+			"homepage": "https://beheh.de"
         }
-    ]
+    ],
+    "require": {
+        "beheh/sulphur": "~1.1"
+    }
 }
