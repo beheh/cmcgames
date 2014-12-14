@@ -1,0 +1,13 @@
+#cmc-dynamic-no-game-connection { display: none; }
+.cmc-dynamic-game { height: 180px; }
+
+.cmc-dynamic-game-image {
+	display: block;
+	float: left;
+	background-color: black;
+	border: solid 1px white;
+	width: 200px;
+	height: 150px;
+	margin-right: 10px;
+	background-size: 200px 150px;
+}
