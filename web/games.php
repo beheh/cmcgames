@@ -7,6 +7,7 @@ class CMCGames {
 	private static $masterserver = 'league.clonkspot.org';
 	private static $template_file = __DIR__.'/../static/basic.css';
 	private static $cache_file = __DIR__.'/../cache/cache.css';
+	private static $max_references = 3;
 
 	public static function handleRequest() {
 		$i = 0;
@@ -25,8 +26,11 @@ class CMCGames {
 			self::respond('/'.'* Couldn\'t write to cache *'.'/');
 			exit();
 		}
+
 		register_shutdown_function('CMCGames::unlock');
 		self::lock();
+
+		$reference_markup = '';
 		$http_response = self::fetchResponse();
 		$status = null;
 		switch($http_response->getStatusCode()) {
@@ -36,8 +40,24 @@ class CMCGames {
 				break;
 			case 200:
 				// expected response
-				$response = Sulphur\ResponseFactory::fromString($http_response->getBody());
-				$references = $response->where('Title')->contains('CMC');
+				$parser = new Sulphur\Parser();
+				$response = $parser->parse($http_response->getBody());
+
+				$references = array();
+				foreach($response->all() as $reference) {
+					$valid = false;
+					foreach($reference->all('Resource') as $resource) {
+						if($resource->Filename === "ModernCombat.c4d") {
+							$valid = true;
+							break;
+						}
+					}
+					if($valid) {
+						$references[] = $reference;
+					}
+				}
+
+				// update status text
 				switch(count($references)) {
 					case 0:
 						$status = 'Keine Runden verfügbar. Hoste jetzt ein Spiel, um hier zu erscheinen.';
@@ -49,6 +69,47 @@ class CMCGames {
 						$status = 'Folgende Runden sind jetzt verfügbar:';
 						break;
 				}
+
+				// filter rounds
+				usort($references, function($a, $b) {
+					if($a->PasswordNeeded && !$b->PasswordNeeded) {
+						return 1;
+					}
+					if($b->PasswordNeeded && !$a->PasswordNeeded) {
+						return -1;
+					}
+					return $a->StartTime - $b->StartTime;
+				});
+
+				// detail rounds
+				for($i = 1; $i <= self::$max_references && $i <= count($references); $i++) {
+					$reference = $references[$i - 1];
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-image { display: none; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-title:after { content: \''.$reference->Title.'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-host { content: \'auf '.$reference->first('Client')->Name.'\'; }'.PHP_EOL;
+					$state = 'Unbekannt';
+					switch($reference->State) {
+						case 'Lobby':
+							$state = 'In der Lobby (seit '.self::textTime(time() - $reference->StartTime).')';
+							break;
+						case 'Running':
+							$state = 'Im Spiel (seit '.self::textTime(time() - $reference->StartTime).')';
+							break;
+						case 'Paused':
+							$state = 'Pausiert (Spiel läuft seit '.self::textTime(time() - $reference->StartTime).')';
+							break;
+					}
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-state { content: \'auf '.$state.'\'; }'.PHP_EOL;
+					$players = array();
+					foreach($reference->first('PlayerInfos')->all('Client') as $client) {
+						foreach($client->all('Player') as $player) {
+							$players[] = $player->Name;
+						}
+					}
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-playercount { content: \''.count($players).'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-players { content: \''.implode(', ', $players).'\'; }'.PHP_EOL;
+				}
+
 				break;
 			default:
 				// some error
@@ -58,16 +119,35 @@ class CMCGames {
 		$content = file_get_contents(self::$template_file).PHP_EOL;
 
 		$content .= '#cmc-dynamic-game-status:after { content: \''.$status.'\'; }'.PHP_EOL.PHP_EOL;
+		if(!empty($reference_markup)) {
+			$content .= $reference_markup.PHP_EOL.PHP_EOL;
+		}
 		$content .= '/'.'* Cached at '.date('Y-m-d H:i:s').' *'.'/';
-		self::writeCache($content);
+
+		//self::writeCache($content);
 		self::unlock();
 		self::respond($content);
+	}
+	
+	public static function textTime($time) {
+		$string = 'gerade eben ('.$time.')';
+		if($time > 60) {
+			$string = '~'.round($time / 60).'m';
+		}
+		if($time > 60*60) {
+			$string = '~'.round($time / 60 / 60).'h';
+		}
+		if($time > 24*60*60) {
+			$string = 'einer Ewigkeit';
+		}
+		
+		return $string;
 	}
 
 	protected static function fetchResponse() {
 		$headers = array(
 			'Accept' => 'text/plain',
-			'User-Agent' => 'CMCGames/1.1',
+			'User-Agent' => get_class().'/1.1',
 		);
 		if(file_exists(self::$cache_file.'.time')) {
 			$headers['If-Modified-Since'] = file_get_contents(self::$cache_file.'.time');

@@ -10,7 +10,7 @@
 		}
 	],
 	"require": {
-		"beheh/sulphur": "~1",
+		"beheh/sulphur": "~2",
 		"guzzlehttp/guzzle": "~5"
 	}
 }
