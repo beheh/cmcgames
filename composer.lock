@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "beheh/sulphur",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beheh/sulphur.git",
-                "reference": "aadf9b3f83e6972922f0d7636912d03c4a207afc"
+                "reference": "d6974547b795aa386dc0d20b469063af17c7d905"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beheh/sulphur/zipball/aadf9b3f83e6972922f0d7636912d03c4a207afc",
-                "reference": "aadf9b3f83e6972922f0d7636912d03c4a207afc",
+                "url": "https://api.github.com/repos/beheh/sulphur/zipball/d6974547b795aa386dc0d20b469063af17c7d905",
+                "reference": "d6974547b795aa386dc0d20b469063af17c7d905",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 "masterserver",
                 "openclonk"
             ],
-            "time": "2015-01-21 21:27:43"
+            "time": "2015-01-25 09:58:29"
         },
         {
             "name": "guzzlehttp/guzzle",
