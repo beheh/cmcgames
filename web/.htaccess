@@ -6,3 +6,4 @@ RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
 RewriteRule ^(.*) - [E=BASE:%1]
 
 RewriteRule ^games\.css$ %{ENV:BASE}/games.php [L]
+

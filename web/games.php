@@ -86,24 +86,24 @@ class CMCGames {
 					$reference = $references[$i - 1];
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-image { display: none; }'.PHP_EOL;
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-title:after { content: \''.$reference->Title.'\'; }'.PHP_EOL;
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-host { content: \'auf '.$reference->first('Client')->Name.'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-host { content: \'auf '.self::decodeSpecialChars($reference->first('Client')->Name).'\'; }'.PHP_EOL;
 					$state = 'Unbekannt';
 					switch($reference->State) {
 						case 'Lobby':
 							$state = 'In der Lobby (seit '.self::textTime(time() - $reference->StartTime).')';
 							break;
 						case 'Running':
-							$state = 'Im Spiel (seit '.self::textTime(time() - $reference->StartTime).')';
+							$state = 'Im Spiel (seit '.self::textTime($reference->Time).')';
 							break;
 						case 'Paused':
 							$state = 'Pausiert (Spiel läuft seit '.self::textTime(time() - $reference->StartTime).')';
 							break;
 					}
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-state { content: \'auf '.$state.'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-state { content: \''.$state.'\'; }'.PHP_EOL;
 					$players = array();
 					foreach($reference->first('PlayerInfos')->all('Client') as $client) {
 						foreach($client->all('Player') as $player) {
-							$players[] = $player->Name;
+							$players[] = self::decodeSpecialChars($player->Name);
 						}
 					}
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-playercount { content: \''.count($players).'\'; }'.PHP_EOL;
@@ -128,19 +128,27 @@ class CMCGames {
 		self::unlock();
 		self::respond($content);
 	}
-	
+
+	public static function decodeSpecialChars($string) {
+		$string = preg_replace_callback('/(^|[^\\\])\\\([0-9]+)/m', function($m) {
+			return $m[1].chr(octdec($m[2]));
+		}, $string);
+		$string = str_replace('\\\\', '\\', $string);
+		return mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
+	}
+
 	public static function textTime($time) {
 		$string = 'gerade eben ('.$time.')';
 		if($time > 60) {
 			$string = '~'.round($time / 60).'m';
 		}
-		if($time > 60*60) {
+		if($time > 60 * 60) {
 			$string = '~'.round($time / 60 / 60).'h';
 		}
-		if($time > 24*60*60) {
+		if($time > 24 * 60 * 60) {
 			$string = 'einer Ewigkeit';
 		}
-		
+
 		return $string;
 	}
 
