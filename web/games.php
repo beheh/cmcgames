@@ -46,6 +46,12 @@ class CMCGames {
 				$references = array();
 				foreach($response->all() as $reference) {
 					$valid = false;
+					$playercount = 0;
+					foreach($reference->first('PlayerInfos')->all('Client') as $client) {
+						$playercount += count($client->all('Player'));
+					}
+					if($playercount < 1)
+						continue;
 					foreach($reference->all('Resource') as $resource) {
 						if($resource->Filename === "ModernCombat.c4d") {
 							$valid = true;
@@ -85,7 +91,7 @@ class CMCGames {
 				for($i = 1; $i <= self::$max_references && $i <= count($references); $i++) {
 					$reference = $references[$i - 1];
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-image { display: none; }'.PHP_EOL;
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-title:after { content: \''.$reference->Title.'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-title:after { content: \''.strip_tags($reference->Title).'\'; }'.PHP_EOL;
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-host { content: \'auf '.self::decodeSpecialChars($reference->first('Client')->Name).'\'; }'.PHP_EOL;
 					$state = 'Unbekannt';
 					switch($reference->State) {
@@ -138,7 +144,7 @@ class CMCGames {
 	}
 
 	public static function textTime($time) {
-		$string = 'gerade eben ('.$time.')';
+		$string = 'gerade eben';
 		if($time > 60) {
 			$string = '~'.round($time / 60).'m';
 		}
