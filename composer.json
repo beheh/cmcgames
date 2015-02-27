@@ -1,5 +1,6 @@
 {
 	"name": "beheh/cmcgames",
+	"description": "Automatic game list for CMC on the Clonk Forge",
 	"type": "project",
 	"license": "ISC",
 	"authors": [
