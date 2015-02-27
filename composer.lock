@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b87982f828a3ab8ad06982bd7e03ae2d",
+    "hash": "7ca63fc8c842845f303d546c7346e844",
     "packages": [
         {
             "name": "beheh/sulphur",
@@ -258,6 +258,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">= 5.6"
+    },
     "platform-dev": []
 }

@@ -11,6 +11,7 @@
 		}
 	],
 	"require": {
+		"php": ">= 5.6",
 		"beheh/sulphur": "~2",
 		"guzzlehttp/guzzle": "~5"
 	}
