@@ -89,7 +89,11 @@ class CMCGames {
 				});
 
 				// detail rounds
-				for($i = 1; $i <= self::$max_references && $i <= count($references); $i++) {
+				for($i = 1; $i <= self::$max_references; $i++) {
+					if($i > count($references)) {
+							$reference_markup .= '#cmc-dynamic-game'.$i.' { display: none; }'.PHP_EOL;
+						continue;
+					}
 					$reference = $references[$i - 1];
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-image { ';
 					$filename = $reference->first('Scenario')->Filename;
