@@ -109,7 +109,7 @@ class CMCGames {
 					}
 					$reference_markup .= ' }'.PHP_EOL;
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-title::after { content: \''.strip_tags($reference->Title).'\'; }'.PHP_EOL;
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-host { content: \'auf '.self::decodeSpecialChars($reference->first('Client')->Name).'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-host::after { content: \'auf '.self::decodeSpecialChars($reference->first('Client')->Name).'\'; }'.PHP_EOL;
 					$state = 'Unbekannt';
 					switch($reference->State) {
 						case 'Lobby':
@@ -129,8 +129,8 @@ class CMCGames {
 							$players[] = self::decodeSpecialChars($player->Name);
 						}
 					}
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-playercount { content: \''.count($players).'\'; }'.PHP_EOL;
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-players { content: \''.implode(', ', $players).'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-playercount::after { content: \''.count($players).'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-players::after { content: \''.implode(', ', $players).'\'; }'.PHP_EOL;
 				}
 
 				break;
