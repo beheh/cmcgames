@@ -8,6 +8,7 @@ class CMCGames {
 	private static $template_file = __DIR__.'/../static/basic.css';
 	private static $cache_file = __DIR__.'/../cache/cache.css';
 	private static $max_references = 3;
+	private static $scen_regex = '/ModernCombat.c4f\\\\\\\\(.*)\.c4s/';
 
 	public static function handleRequest() {
 		$i = 0;
@@ -90,7 +91,19 @@ class CMCGames {
 				// detail rounds
 				for($i = 1; $i <= self::$max_references && $i <= count($references); $i++) {
 					$reference = $references[$i - 1];
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-image { display: none; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-image { ';
+					$filename = $reference->first('Scenario')->Filename;
+					$matches = array();
+					if(stripos($reference->Title, 'Open Beta') !== false) {
+						$reference_markup .= 'background-image: url(\'img/Betatest.png\');';
+					}
+					else if(preg_match(self::$scen_regex, $filename, $matches) && file_exists('img/'.basename($matches[1]).'.png')) {
+						$reference_markup .= 'background-image: url(\'img/'.basename($matches[1]).'.png\');';
+					}
+					else {
+						$reference_markup .= 'background-image: url(\'img/Unknown.png\');';
+					}
+					$reference_markup .= ' }'.PHP_EOL;
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-title:after { content: \''.strip_tags($reference->Title).'\'; }'.PHP_EOL;
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-host { content: \'auf '.self::decodeSpecialChars($reference->first('Client')->Name).'\'; }'.PHP_EOL;
 					$state = 'Unbekannt';
@@ -124,11 +137,11 @@ class CMCGames {
 		}
 		$content = file_get_contents(self::$template_file).PHP_EOL;
 
-		$content .= '#cmc-dynamic-game-status:after { content: \''.$status.'\'; }'.PHP_EOL.PHP_EOL;
+		$content .= '#cmc-dynamic-game-status:after { content: \''.$status.'\'; }'.PHP_EOL;
 		if(!empty($reference_markup)) {
-			$content .= $reference_markup.PHP_EOL.PHP_EOL;
+			$content .= PHP_EOL.$reference_markup;
 		}
-		$content .= '/'.'* Cached at '.date('Y-m-d H:i:s').' *'.'/';
+		$content .= PHP_EOL.'/'.'* Cached at '.date('Y-m-d H:i:s').' *'.'/';
 
 		self::writeCache($content);
 		self::unlock();
