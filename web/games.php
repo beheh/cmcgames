@@ -104,7 +104,7 @@ class CMCGames {
 						$reference_markup .= 'background-image: url(\'img/Unknown.png\');';
 					}
 					$reference_markup .= ' }'.PHP_EOL;
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-title:after { content: \''.strip_tags($reference->Title).'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-title::after { content: \''.strip_tags($reference->Title).'\'; }'.PHP_EOL;
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-host { content: \'auf '.self::decodeSpecialChars($reference->first('Client')->Name).'\'; }'.PHP_EOL;
 					$state = 'Unbekannt';
 					switch($reference->State) {
@@ -137,7 +137,7 @@ class CMCGames {
 		}
 		$content = file_get_contents(self::$template_file).PHP_EOL;
 
-		$content .= '#cmc-dynamic-game-status:after { content: \''.$status.'\'; }'.PHP_EOL;
+		$content .= '#cmc-dynamic-game-status::after { content: \''.$status.'\'; }'.PHP_EOL;
 		if(!empty($reference_markup)) {
 			$content .= PHP_EOL.$reference_markup;
 		}
