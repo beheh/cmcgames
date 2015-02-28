@@ -130,7 +130,7 @@ class CMCGames {
 		}
 		$content .= '/'.'* Cached at '.date('Y-m-d H:i:s').' *'.'/';
 
-		//self::writeCache($content);
+		self::writeCache($content);
 		self::unlock();
 		self::respond($content);
 	}
