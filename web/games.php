@@ -108,7 +108,11 @@ class CMCGames {
 						$reference_markup .= 'background-image: url(\'img/Unknown.png\');';
 					}
 					$reference_markup .= ' }'.PHP_EOL;
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-title::after { content: \''.strip_tags($reference->Title).'\'; }'.PHP_EOL;
+					$title = self::decodeSpecialChars(strip_tags($reference->Title));
+					if(strpos($title, 'CMC -') === 0) {
+						$title = trim(substr($title, 5));
+					}
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-title::after { content: \''.$title.'\'; }'.PHP_EOL;
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-host::after { content: \'auf '.self::decodeSpecialChars($reference->first('Client')->Name).'\'; }'.PHP_EOL;
 					$state = 'Unbekannt';
 					switch($reference->State) {
