@@ -122,7 +122,7 @@ class CMCGames {
 							$state = 'Pausiert (Spiel läuft seit '.self::textTime(time() - $reference->StartTime).')';
 							break;
 					}
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-state { content: \''.$state.'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-state::after { content: \''.$state.'\'; }'.PHP_EOL;
 					$players = array();
 					foreach($reference->first('PlayerInfos')->all('Client') as $client) {
 						foreach($client->all('Player') as $player) {
