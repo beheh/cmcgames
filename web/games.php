@@ -48,6 +48,9 @@ class CMCGames {
 				foreach($response->all() as $reference) {
 					$valid = false;
 					$playercount = 0;
+					if(!$reference->first('PlayerInfos')) {
+						continue;
+					}
 					foreach($reference->first('PlayerInfos')->all('Client') as $client) {
 						$playercount += count($client->all('Player'));
 					}
