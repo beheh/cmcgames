@@ -8,7 +8,7 @@ class CMCGames {
 	private static $template_file = __DIR__.'/../static/basic.css';
 	private static $cache_file = __DIR__.'/../cache/cache.css';
 	private static $max_references = 3;
-	private static $scen_regex = '/ModernCombat.c4f\\\\\\\\(.*)\.c4s/';
+	private static $scen_regex = '/(ModernCombat.c4f\\\\\\\\)?(.*)\.c4s/';
 
 	public static function handleRequest() {
 		$i = 0;
