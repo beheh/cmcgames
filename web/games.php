@@ -104,8 +104,8 @@ class CMCGames {
 					if(stripos($reference->Title, 'Open Beta') !== false) {
 						$reference_markup .= 'background-image: url(\'img/Betatest.png\');';
 					}
-					else if(preg_match(self::$scen_regex, $filename, $matches) && file_exists('img/'.basename($matches[1]).'.png')) {
-						$reference_markup .= 'background-image: url(\'img/'.basename($matches[1]).'.png\');';
+					else if(preg_match(self::$scen_regex, $filename, $matches) && file_exists('img/'.basename($matches[2]).'.png')) {
+						$reference_markup .= 'background-image: url(\'img/'.basename($matches[2]).'.png\');';
 					}
 					else {
 						$reference_markup .= 'background-image: url(\'img/Unknown.png\');';
