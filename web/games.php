@@ -133,7 +133,7 @@ class CMCGames {
 					$players = array();
 					foreach($reference->first('PlayerInfos')->all('Client') as $client) {
 						foreach($client->all('Player') as $player) {
-							$players[] = self::decodeSpecialChars($player->Name);
+							$players[] = trim(self::decodeSpecialChars($player->Name));
 						}
 					}
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-playercount::after { content: \''.count($players).'\'; }'.PHP_EOL;
