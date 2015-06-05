@@ -116,7 +116,7 @@ class CMCGames {
 						$title = trim(substr($title, 5));
 					}
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-title::after { content: \''.$title.'\'; }'.PHP_EOL;
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-host::after { content: \'auf '.self::decodeSpecialChars($reference->first('Client')->Name).'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-host::after { content: \'auf '.self::escape($reference->first('Client')->Name).'\'; }'.PHP_EOL;
 					$state = 'Unbekannt';
 					switch($reference->State) {
 						case 'Lobby':
@@ -133,7 +133,7 @@ class CMCGames {
 					$players = array();
 					foreach($reference->first('PlayerInfos')->all('Client') as $client) {
 						foreach($client->all('Player') as $player) {
-							$players[] = trim(self::decodeSpecialChars($player->Name));
+							$players[] = trim(self::escape($player->Name));
 						}
 					}
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-playercount::after { content: \''.count($players).'\'; }'.PHP_EOL;
@@ -157,6 +157,13 @@ class CMCGames {
 		self::writeCache($content);
 		self::unlock();
 		self::respond($content);
+	}
+
+	public static function escape($string) {
+		$string = str_replace('\\', '\\\\', $string);
+		$string = self::decodeSpecialChars($string);
+		$string = str_replace('\'', '\\\'', $string);
+		return $string;
 	}
 
 	public static function decodeSpecialChars($string) {
