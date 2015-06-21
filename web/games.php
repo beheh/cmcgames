@@ -177,10 +177,13 @@ class CMCGames {
 	public static function textTime($time) {
 		$string = 'gerade eben';
 		if($time > 60) {
-			$string = '~'.round($time / 60).'m';
+			$string = round($time / 60).' Minuten';
 		}
 		if($time > 60 * 60) {
-			$string = '~'.round($time / 60 / 60).'h';
+			$string = 'über einer Stunde';
+		}
+		if($time > 2 * 60 * 60) {
+			$string = 'über '.round($time / 60 / 60).' Stunden';
 		}
 		if($time > 24 * 60 * 60) {
 			$string = 'einer Ewigkeit';
