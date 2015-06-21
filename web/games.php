@@ -176,7 +176,7 @@ class CMCGames {
 
 	public static function textTime($time) {
 		$string = 'gerade eben';
-		if($time > 60) {
+		if($time > 2 * 60) {
 			$string = round($time / 60).' Minuten';
 		}
 		if($time > 60 * 60) {
