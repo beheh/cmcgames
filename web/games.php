@@ -116,7 +116,7 @@ class CMCGames {
 						$title = trim(substr($title, 5));
 					}
 					$reference_markup .= '#cmc-dynamic-game'.$i.'-title::after { content: \''.$title.'\'; }'.PHP_EOL;
-					$reference_markup .= '#cmc-dynamic-game'.$i.'-host::after { content: \'auf '.self::escape($reference->first('Client')->Name).'\'; }'.PHP_EOL;
+					$reference_markup .= '#cmc-dynamic-game'.$i.'-host::after { content: \'auf '.trim(self::escape($reference->first('Client')->Name)).'\'; }'.PHP_EOL;
 					$state = 'Unbekannt';
 					switch($reference->State) {
 						case 'Lobby':
