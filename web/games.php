@@ -160,7 +160,7 @@ class CMCGames {
 	}
 
 	public static function escape($string) {
-		$string = str_replace('\\', '\\\\', $string);
+		$string = rtrim($string, '\\');
 		$string = self::decodeSpecialChars($string);
 		$string = str_replace('\'', '\\\'', $string);
 		return $string;
