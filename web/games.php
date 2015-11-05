@@ -179,7 +179,10 @@ class CMCGames {
 		if($time > 2 * 60) {
 			$string = round($time / 60).' Minuten';
 		}
-		if($time > 60 * 60) {
+		if($time > 45 * 60) {
+			$string = 'einer Stunde';
+		}
+		if($time > 75 * 60) {
 			$string = 'über einer Stunde';
 		}
 		if($time > 2 * 60 * 60) {
